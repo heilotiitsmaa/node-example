@@ -1,0 +1,16 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server",
+    "dev": "node --watch server"
+  },
+  "author": "Heilo Tiitsmaa",
+  "license": "ISC",
+  "description": "Node.js example",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
