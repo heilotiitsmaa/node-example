@@ -4,13 +4,16 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node server",
-    "dev": "node --watch server"
+    "start": "nodemon --env-file=.env server2.js"
   },
   "author": "Heilo Tiitsmaa",
   "license": "ISC",
   "description": "Node.js example",
   "dependencies": {
     "express": "^4.21.2"
-  }
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "keywords": []
 }

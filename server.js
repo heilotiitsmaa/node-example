@@ -1,41 +1,44 @@
 import http from 'http';
 import fs from 'fs/promises';
-const PORT = process.env.PORT;
+import url from 'url'; //url module
+import path from 'path';
+//kõik need on core node.js moodulid = st. ei pea installima
+const PORT = 8000;
 
-//video näide:
-// const express = require('express');
-//const app = express();
+//Get current path
+// __filename //käesolev faili nimi teekonnaga
+const __filename = url.fileURLToPath(import.meta.url); //annab faili url'i failile, mille sees ta on
+// __dirname // annab käesoleva faili teekonna, milles sees viibin parasjagu
+const __dirname = path.dirname(__filename);
 
-//app.get('/', (req, res) => {
-   // res.send('Hello World, Tere Maailm');
-//});
-//let posts = [
-   // {id: 1, title: 'Post 1', body: 'This is post 1'},
-   // {id: 2, title: 'Post 2', body: 'This is post 2'},
-//];
-//app.get('/api/posts', (req, res) => {
-    //res.json(posts);
-//});
-//app.listen(8000, ()=> console.log('Server running on port 8000'));
+console.log(__filename, __dirname);
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async(req, res) => {
     //console.log(req.url);
     try{
         //check if GET req
     if(req.method === 'GET') {
+        let filePath;
         if (req.url === '/') {
-                res.writeHead(200, {'Content-Type': 'text/html'});
-                res.end('<h1>Home Page</h1>');
+            filePath = path.join(__dirname, 'public', 'index.html');
             } else if (req.url === '/about') {
-                res.writeHead(200, {'Content-Type': 'text/html'});
-                res.end('<h1>About Page</h1>');
+                filePath = path.join(__dirname, 'public', 'about.html');
             } else {
-                res.writeHead(404, {'Content-Type': 'text/html'});
-                res.end('<h1>404 Not Found</h1>');
+                throw new Error('Not found');
             }
-    } else {
-        throw new Error('Method not allowed');
-        }} catch (error) {
-        res.writeHead(500, {'Content-Type': 'text/html'});
-        res.end('<h1>500 Internal Server Error</h1>');
-    }});
+
+            const data = await fs.readFile(filePath);
+            res.setHeader('Content-Type', 'text/html');
+            res.write(data);
+            res.end();
+        } else {
+            throw new Error('Method not allowed');
+        }
+    } catch (error) {
+        res.writeHead(500, {'Content-Type': 'text/plain'});
+        res.end('Server Error');
+    }
+});
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
